@@ -1,3 +1,6 @@
+/*
+Base code provided by rtdimpsey.
+*/
 #pragram once
 #include <pthread.h>
 #include <iostream>

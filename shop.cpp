@@ -1,5 +1,7 @@
-
-#include "Shop_org.h"
+/*
+Base code provided by rtdimpsey.
+*/
+#include "shop.h"
 
 void Shop_org::init() 
 {
