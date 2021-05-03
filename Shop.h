@@ -1,7 +1,9 @@
 /*
 Base code provided by rtdimpsey.
 */
-#pragram once
+#ifndef SHOP_H__ 
+#define SHOP_H_ 
+
 #include <pthread.h>
 #include <iostream>
 #include <sstream>
@@ -11,15 +13,15 @@ using namespace std;
 
 #define kDefaultNumChairs 3
 
-class Shop_org 
+class Shop 
 {
 public:
-   Shop_org(int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), customer_in_chair_(0),
+   Shop(int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), customer_in_chair_(0),
       in_service_(false), money_paid_(false), cust_drops_(0)
    { 
       init(); 
    };
-   Shop_org() : max_waiting_cust_(kDefaultNumChairs), customer_in_chair_(0), in_service_(false),
+   Shop() : max_waiting_cust_(kDefaultNumChairs), customer_in_chair_(0), in_service_(false),
       money_paid_(false), cust_drops_(0)
    { 
       init(); 
@@ -53,3 +55,4 @@ public:
    string int2string(int i);
    void print(int person, string message);
 };
+#endif

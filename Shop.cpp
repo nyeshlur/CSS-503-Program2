@@ -1,9 +1,9 @@
 /*
 Base code provided by rtdimpsey.
 */
-#include "shop.h"
+#include "Shop.h"
 
-void Shop_org::init() 
+void Shop::init() 
 {
    pthread_mutex_init(&mutex_, NULL);
    pthread_cond_init(&cond_customers_waiting_, NULL);
@@ -12,24 +12,24 @@ void Shop_org::init()
    pthread_cond_init(&cond_barber_sleeping_, NULL);
 }
 
-string Shop_org::int2string(int i) 
+string Shop::int2string(int i) 
 {
    stringstream out;
    out << i;
    return out.str( );
 }
 
-void Shop_org::print(int person, string message)
+void Shop::print(int person, string message)
 {
    cout << ((person != barber) ? "customer[" : "barber  [" ) << person << "]: " << message << endl;
 }
 
-int Shop_org::get_cust_drops() const
+int Shop::get_cust_drops() const
 {
     return cust_drops_;
 }
 
-bool Shop_org::visitShop(int id) 
+bool Shop::visitShop(int id) 
 {
    pthread_mutex_lock(&mutex_);
    
@@ -63,7 +63,7 @@ bool Shop_org::visitShop(int id)
    return true;
 }
 
-void Shop_org::leaveShop(int id) 
+void Shop::leaveShop(int id) 
 {
    pthread_mutex_lock( &mutex_ );
 
@@ -81,7 +81,7 @@ void Shop_org::leaveShop(int id)
    pthread_mutex_unlock(&mutex_);
 }
 
-void Shop_org::helloCustomer() 
+void Shop::helloCustomer() 
 {
    pthread_mutex_lock(&mutex_);
    
@@ -101,7 +101,7 @@ void Shop_org::helloCustomer()
    pthread_mutex_unlock( &mutex_ );
 }
 
-void Shop_org::byeCustomer() 
+void Shop::byeCustomer() 
 {
   pthread_mutex_lock(&mutex_);
 
