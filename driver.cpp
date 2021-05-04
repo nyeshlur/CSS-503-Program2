@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
    //Single barber, one shop, many customers
    pthread_t barber_threads[num_barbers];
    pthread_t customer_threads[num_customers];
-   Shop shop(num_chairs);
+   Shop shop(num_barbers, num_chairs);
 
     for (int i = 0; i < num_barbers; i++) 
     {

@@ -12,11 +12,12 @@ Base code provided by rtdimpsey.
 using namespace std;
 
 #define kDefaultNumChairs 3
+#define kDefaultNumBarbers 1
 
 class Shop 
 {
 public:
-   Shop(int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), customer_in_chair_(0),
+   Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), customer_in_chair_(0),
       in_service_(false), money_paid_(false), cust_drops_(0)
    { 
       init(); 
