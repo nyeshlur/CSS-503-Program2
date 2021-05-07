@@ -2,6 +2,7 @@
 Base code provided by rtdimpsey.
 */
 #include "Shop.h"
+using namespace std;
 
 void Shop::init() 
 {
