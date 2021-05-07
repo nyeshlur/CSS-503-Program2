@@ -22,7 +22,13 @@ string Shop::int2string(int i)
 
 void Shop::print(int person, string message)
 {
-   cout << ((person != barber) ? "customer[" : "barber  [" ) << person << "]: " << message << endl;
+   if(person > 0) {
+      cout << "customer[" << person << "]: " << message << endl;
+   } else {
+      person = person * -1;
+      cout << "barber[" << person << "]: " << message << endl;
+   }
+   //cout << ((person != barber) ? "customer[" : "barber  [" ) << person << "]: " << message << endl;
 }
 
 int Shop::get_cust_drops() const
@@ -82,14 +88,14 @@ void Shop::leaveShop(int id)
    pthread_mutex_unlock(&mutex_);
 }
 
-void Shop::helloCustomer() 
+void Shop::helloCustomer(int id) 
 {
    pthread_mutex_lock(&mutex_);
    
    // If no customers than barber can sleep
    if (waiting_chairs_.empty() && customer_in_chair_ == 0 ) 
    {
-      print(barber, "sleeps because of no customers.");
+      print(((id) * -1), "sleeps because of no customers.");
       pthread_cond_wait(&cond_barber_sleeping_, &mutex_);
    }
 
@@ -98,17 +104,17 @@ void Shop::helloCustomer()
        pthread_cond_wait(&cond_barber_sleeping_, &mutex_);
    }
 
-   print(barber, "starts a hair-cut service for " + int2string( customer_in_chair_ ) );
+   print(((id) * -1), "starts a hair-cut service for " + int2string( customer_in_chair_ ) );
    pthread_mutex_unlock( &mutex_ );
 }
 
-void Shop::byeCustomer() 
+void Shop::byeCustomer(int id) 
 {
   pthread_mutex_lock(&mutex_);
 
   // Hair Cut-Service is done so signal customer and wait for payment
   in_service_ = false;
-  print(barber, "says he's done with a hair-cut service for " + int2string(customer_in_chair_));
+  print(((id) * -1), "says he's done with a hair-cut service for " + int2string(customer_in_chair_));
   money_paid_ = false;
   pthread_cond_signal(&cond_customer_served_);
   while (money_paid_ == false)
@@ -118,7 +124,7 @@ void Shop::byeCustomer()
 
   //Signal to customer to get next one
   customer_in_chair_ = 0;
-  print(barber, "calls in another customer");
+  print(((id) * -1), "calls in another customer");
   pthread_cond_signal( &cond_customers_waiting_ );
 
   pthread_mutex_unlock( &mutex_ );  // unlock

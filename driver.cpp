@@ -87,13 +87,14 @@ void *barber(void *arg)
    ThreadParam* barber_param = (ThreadParam*) arg;
    Shop& shop = *barber_param->shop;
    int service_time = barber_param->service_time;
+   int id = barber_param->id;
    delete barber_param;
 
    while(true) 
    {
-      shop.helloCustomer();
+      shop.helloCustomer(id);
       usleep(service_time);
-      shop.byeCustomer();
+      shop.byeCustomer(id);
    }
    return nullptr;
 }

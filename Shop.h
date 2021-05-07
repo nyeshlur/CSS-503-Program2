@@ -30,8 +30,8 @@ public:
 
    bool visitShop(int id);   // return true only when a customer got a service
    void leaveShop(int id);
-   void helloCustomer();
-   void byeCustomer();
+   void helloCustomer(int id);
+   void byeCustomer(int id);
    int get_cust_drops() const;
 
  private:
