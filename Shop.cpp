@@ -13,9 +13,26 @@ void Shop::init()
 
    pthread_mutex_init(&mutex_, NULL);
    pthread_cond_init(&cond_customers_waiting_, NULL);
-   pthread_cond_init(&cond_customer_served_, NULL);
-   pthread_cond_init(&cond_barber_paid_, NULL);
-   pthread_cond_init(&cond_barber_sleeping_, NULL);
+
+   cond_customer_served_ = new pthread_cond_t[barber];
+   //pthread_cond_init(&cond_customer_served_, NULL);
+
+   cond_barber_paid_ = new pthread_cond_t[barber];
+   //pthread_cond_init(&cond_barber_paid_, NULL);
+
+   cond_barber_sleeping_ = new pthread_cond_t[barber];
+   //pthread_cond_init(&cond_barber_sleeping_, NULL);
+
+   for (int i = 0; i < barber; i++)
+   {
+      customer_in_chair_[i] = 0;
+      in_service_[i] = false;
+      money_paid_[i] = false;
+
+      pthread_cond_init(&cond_customer_served_[i], NULL);
+      pthread_cond_init(&cond_barber_paid_[i], NULL);
+      pthread_cond_init(&cond_barber_sleeping_[i], NULL);
+   }
 }
 
 string Shop::int2string(int i) 

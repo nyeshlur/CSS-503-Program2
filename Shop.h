@@ -17,13 +17,12 @@ using namespace std;
 class Shop 
 {
 public:
-   Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), customer_in_chair_(0),
-      in_service_(false), money_paid_(false), cust_drops_(0), max_num_barbers_((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
+   Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), 
+   cust_drops_(0), max_num_barbers_((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
    { 
       init(); 
    };
-   Shop() : max_waiting_cust_(kDefaultNumChairs), max_num_barbers_(kDefaultNumBarbers), customer_in_chair_(0), 
-      in_service_(false), money_paid_(false), cust_drops_(0)
+   Shop() : max_waiting_cust_(kDefaultNumChairs), max_num_barbers_(kDefaultNumBarbers), cust_drops_(0)
    { 
       init(); 
    };
