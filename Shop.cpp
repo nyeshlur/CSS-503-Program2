@@ -24,11 +24,14 @@ void Shop::init()
    //pthread_cond_init(&cond_barber_sleeping_, NULL);
 
    int default_customer_in_chair_ = 0;
+   bool default_in_service_ = false;
+   bool default_money_paid_ = false;
+
    for (int i = 0; i < barber; i++)
    {
-      customer_in_chair_[i] = &default_customer_in_chair_;
-      in_service_[i] = false;
-      money_paid_[i] = false;
+      customer_in_chair_[i] = default_customer_in_chair_;
+      in_service_[i] = default_in_service_;
+      money_paid_[i] = default_money_paid_;
 
       pthread_cond_init(&cond_customer_served_[i], NULL);
       pthread_cond_init(&cond_barber_paid_[i], NULL);
@@ -59,7 +62,7 @@ int Shop::get_cust_drops() const
     return cust_drops_;
 }
 
-int Shop::visitShop(int id) 
+int Shop::visitShop(int customerID) 
 {
    pthread_mutex_lock(&mutex_);
    
@@ -93,61 +96,61 @@ int Shop::visitShop(int id)
    return 0; //return true;
 }
 
-void Shop::leaveShop(int id, int barber) 
+void Shop::leaveShop(int customerID, int barberID) 
 {
    pthread_mutex_lock( &mutex_ );
 
    // Wait for service to be completed
-   print(id, "wait for the hair-cut to be done");
-   while (in_service_ == true)
+   print(customerID, "wait for barber[" + int2string(barberID) + "] to be done with hair-cut");
+   while (in_service_[barberID] == true)
    {
-      pthread_cond_wait(&cond_customer_served_, &mutex_);
+      pthread_cond_wait(&cond_customer_served_[barberID], &mutex_);
    }
    
    // Pay the barber and signal barber appropriately
-   money_paid_ = true;
-   pthread_cond_signal(&cond_barber_paid_);
-   print(id, "says good-bye to the barber." );
+   money_paid_[barberID] = true;
+   pthread_cond_signal(&cond_barber_paid_[barberID]);
+   print(customerID, "says good-bye to the barber." );
    pthread_mutex_unlock(&mutex_);
 }
 
-void Shop::helloCustomer(int id) 
+void Shop::helloCustomer(int barberID) 
 {
    pthread_mutex_lock(&mutex_);
    
    // If no customers than barber can sleep
-   if (waiting_chairs_.empty() && customer_in_chair_ == 0 ) 
+   if (waiting_chairs_.empty() && customer_in_chair_[barberID] == 0 ) 
    {
-      print(((id) * -1), "sleeps because of no customers.");
-      pthread_cond_wait(&cond_barber_sleeping_, &mutex_);
+      print(((barberID) * -1), "sleeps because of no customers.");
+      pthread_cond_wait(&cond_barber_sleeping_[barberID], &mutex_);
    }
 
-   if (customer_in_chair_ == 0)               // check if the customer, sit down.
+   if (customer_in_chair_[barberID] == 0)               // check if the customer, sit down.
    {
-       pthread_cond_wait(&cond_barber_sleeping_, &mutex_);
+       pthread_cond_wait(&cond_barber_sleeping_[barberID], &mutex_);
    }
 
-   print(((id) * -1), "starts a hair-cut service for " + int2string( customer_in_chair_ ) );
-   pthread_mutex_unlock( &mutex_ );
+   print(((barberID) * -1), "starts a hair-cut service for " + int2string( customer_in_chair_[barberID]));
+   pthread_mutex_unlock(&mutex_);
 }
 
-void Shop::byeCustomer(int id) 
+void Shop::byeCustomer(int barberID) 
 {
   pthread_mutex_lock(&mutex_);
 
   // Hair Cut-Service is done so signal customer and wait for payment
-  in_service_ = false;
-  print(((id) * -1), "says he's done with a hair-cut service for " + int2string(customer_in_chair_));
-  money_paid_ = false;
-  pthread_cond_signal(&cond_customer_served_);
-  while (money_paid_ == false)
+  in_service_[barberID] = false;
+  print(((barberID) * -1), "says he's done with a hair-cut service for " + int2string(customer_in_chair_[barberID]));
+  money_paid_[barberID] = false;
+  pthread_cond_signal(&cond_customer_served_[barberID]);
+  while (money_paid_[barberID] == false)
   {
-      pthread_cond_wait(&cond_barber_paid_, &mutex_);
+      pthread_cond_wait(&cond_barber_paid_[barberID], &mutex_);
   }
 
   //Signal to customer to get next one
-  customer_in_chair_ = 0;
-  print(((id) * -1), "calls in another customer");
+  customer_in_chair_[barberID] = 0;
+  print(((barberID) * -1), "calls in another customer");
   pthread_cond_signal( &cond_customers_waiting_ );
 
   pthread_mutex_unlock( &mutex_ );  // unlock
