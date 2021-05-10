@@ -36,7 +36,7 @@ int Shop::get_cust_drops() const
     return cust_drops_;
 }
 
-bool Shop::visitShop(int id) 
+int Shop::visitShop(int id) 
 {
    pthread_mutex_lock(&mutex_);
    
@@ -46,7 +46,7 @@ bool Shop::visitShop(int id)
       print( id,"leaves the shop because of no available waiting chairs.");
       ++cust_drops_;
       pthread_mutex_unlock(&mutex_);
-      return false;
+      return 0; //return false;
    }
    
    // If someone is being served or transitioning waiting to service chair
@@ -67,10 +67,10 @@ bool Shop::visitShop(int id)
    pthread_cond_signal(&cond_barber_sleeping_);
 
    pthread_mutex_unlock(&mutex_); 
-   return true;
+   return 0; //return true;
 }
 
-void Shop::leaveShop(int id) 
+void Shop::leaveShop(int id, int barber) 
 {
    pthread_mutex_lock( &mutex_ );
 

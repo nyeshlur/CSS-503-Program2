@@ -106,9 +106,16 @@ void *customer(void *arg)
    int id = customer_param->id;
    delete customer_param;
 
+   int barber = -1;
+   if((barber = shop.visitShop(id)) != -1) 
+   {
+     shop.leaveShop(id, barber);
+   }
+   /*
    if (shop.visitShop(id) == true)
    {
        shop.leaveShop(id);
    }
+   */
    return nullptr;
 }

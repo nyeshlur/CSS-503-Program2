@@ -28,8 +28,8 @@ public:
       init(); 
    };
 
-   bool visitShop(int id);   // return true only when a customer got a service
-   void leaveShop(int id);
+   int visitShop(int id);   // return barber id only when a customer got a service
+   void leaveShop(int id, int barber);
    void helloCustomer(int id);
    void byeCustomer(int id);
    int get_cust_drops() const;
