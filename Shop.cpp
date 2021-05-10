@@ -6,6 +6,11 @@ using namespace std;
 
 void Shop::init() 
 {
+
+   customer_in_chair_ = new int[barber];
+   in_service_ = new bool[barber];
+   money_paid_ = new bool[barber];
+
    pthread_mutex_init(&mutex_, NULL);
    pthread_cond_init(&cond_customers_waiting_, NULL);
    pthread_cond_init(&cond_customer_served_, NULL);
