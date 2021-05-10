@@ -15,13 +15,8 @@ void Shop::init()
    pthread_cond_init(&cond_customers_waiting_, NULL);
 
    cond_customer_served_ = new pthread_cond_t[barber];
-   //pthread_cond_init(&cond_customer_served_, NULL);
-
    cond_barber_paid_ = new pthread_cond_t[barber];
-   //pthread_cond_init(&cond_barber_paid_, NULL);
-
    cond_barber_sleeping_ = new pthread_cond_t[barber];
-   //pthread_cond_init(&cond_barber_sleeping_, NULL);
 
    int default_customer_in_chair_ = 0;
    bool default_in_service_ = false;
@@ -54,7 +49,6 @@ void Shop::print(int person, string message)
       person = person * -1;
       cout << "barber[" << person << "]: " << message << endl;
    }
-   //cout << ((person != barber) ? "customer[" : "barber  [" ) << person << "]: " << message << endl;
 }
 
 int Shop::get_cust_drops() const
@@ -69,7 +63,7 @@ int Shop::visitShop(int customerID)
    // If all chairs are full then leave shop
    if (waiting_chairs_.size() == max_waiting_cust_) 
    {
-      print(id,"leaves the shop because of no available waiting chairs.");
+      print(customerID,"leaves the shop because of no available waiting chairs.");
       ++cust_drops_;
       pthread_mutex_unlock(&mutex_);
       return -1; //return false;
@@ -77,28 +71,36 @@ int Shop::visitShop(int customerID)
    
    // If someone is being served or transitioning waiting to service chair
    // then take a chair and wait for service
-   if (customer_in_chair_ != 0 || !waiting_chairs_.empty()) 
+   //if (customer_in_chair_ != 0 || !waiting_chairs_.empty()) 
+   if(hasServiceChair() != -1 || !waiting_chairs_.empty())
    {
-      waiting_chairs_.push(id);
-      print(id, "takes a waiting chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
+      waiting_chairs_.push(customerID);
+      print(customerID, "takes a waiting chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
       pthread_cond_wait(&cond_customers_waiting_, &mutex_);
       waiting_chairs_.pop();
    }
 
-   print(id, "moves to the service chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
-   customer_in_chair_ = id;
-   in_service_ = true;
+   print(customerID, "moves to the service chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
+   
+   int availableChair = hasServiceChair();
+   if (customer_in_chair_[availableChair] == 0) {
+      customer_in_chair_[availableChair] = customerID;             // have the service chair
+      customer_in_chair_[availableChair] = true;
+    }
+   
+   //customer_in_chair_ = id;
+   //in_service_ = true;
 
    // wake up the barber just in case if he is sleeping
-   pthread_cond_signal(&cond_barber_sleeping_);
+   pthread_cond_signal(&cond_barber_sleeping_[availableChair]);
 
    pthread_mutex_unlock(&mutex_); 
-   return 0; //return true;
+   return availableChair; //return true;
 }
 
 void Shop::leaveShop(int customerID, int barberID) 
 {
-   pthread_mutex_lock( &mutex_ );
+   pthread_mutex_lock(&mutex_);
 
    // Wait for service to be completed
    print(customerID, "wait for barber[" + int2string(barberID) + "] to be done with hair-cut");
@@ -154,4 +156,13 @@ void Shop::byeCustomer(int barberID)
   pthread_cond_signal( &cond_customers_waiting_ );
 
   pthread_mutex_unlock( &mutex_ );  // unlock
+}
+
+int Shop::hasServiceChair(){
+    for(int i=0; i< barber; i++){
+        if(customer_in_chair_[i]==0){
+            return i;
+        }
+    }
+    return -1;
 }

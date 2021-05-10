@@ -18,11 +18,11 @@ class Shop
 {
 public:
    Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), 
-   cust_drops_(0), max_num_barbers_((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
+   cust_drops_(0), barber((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
    { 
       init(); 
    };
-   Shop() : max_waiting_cust_(kDefaultNumChairs), max_num_barbers_(kDefaultNumBarbers), cust_drops_(0)
+   Shop() : max_waiting_cust_(kDefaultNumChairs), barber(kDefaultNumBarbers), cust_drops_(0)
    { 
       init(); 
    };
@@ -35,7 +35,7 @@ public:
 
  private:
    const int max_waiting_cust_;              // the max number of threads that can wait
-   const int max_num_barbers_;
+   //const int max_num_barbers_;
    int *customer_in_chair_;
    bool *in_service_;            
    bool *money_paid_;
@@ -50,11 +50,11 @@ public:
    pthread_cond_t  *cond_barber_paid_;
    pthread_cond_t  *cond_barber_sleeping_;
 
-   static const int barber = 0; // the id of the barber thread
+   const int barber = 0; // the id of the barber thread, was static const int
   
    void init();
    string int2string(int i);
    void print(int person, string message);
-   //int hasServiceChair();
+   int hasServiceChair();
 };
 #endif

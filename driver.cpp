@@ -113,11 +113,5 @@ void *customer(void *arg)
    {
      shop.leaveShop(id, barber);
    }
-   /*
-   if (shop.visitShop(id) == true)
-   {
-       shop.leaveShop(id);
-   }
-   */
    return nullptr;
 }
