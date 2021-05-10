@@ -53,6 +53,6 @@ public:
    void init();
    string int2string(int i);
    void print(int person, string message);
-   int hasServiceChair();
+   int hasChair();
 };
 #endif

@@ -72,7 +72,7 @@ int Shop::visitShop(int customerID)
    // If someone is being served or transitioning waiting to service chair
    // then take a chair and wait for service
    //if (customer_in_chair_ != 0 || !waiting_chairs_.empty()) 
-   if(hasServiceChair() == -1 || !waiting_chairs_.empty())
+   if(hasChair() == -1 || !waiting_chairs_.empty())
    {
       waiting_chairs_.push(customerID);
       print(customerID, "takes a waiting chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
@@ -84,7 +84,7 @@ int Shop::visitShop(int customerID)
    //cout << "test" << test << endl;
 
    
-   int availableChair = hasServiceChair();
+   int availableChair = hasChair();
    if (customer_in_chair_[availableChair] == 0) {
       customer_in_chair_[availableChair] = customerID;             // have the service chair
       in_service_[availableChair] = true;
@@ -162,7 +162,7 @@ void Shop::byeCustomer(int barberID)
   pthread_mutex_unlock( &mutex_ );  // unlock
 }
 
-int Shop::hasServiceChair(){
+int Shop::hasChair(){
     for(int i=0; i< barber; i++){
         if(customer_in_chair_[i]==0){
             return i;
