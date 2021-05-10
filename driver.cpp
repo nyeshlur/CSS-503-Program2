@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
       //usleep(rand() % 1000);
       int id = i; //+ 1;
       ThreadParam* barber_param = new ThreadParam(&shop, id, service_time);
-      pthread_create(&barber_threads[i], NULL, barber, barber_param);
+      pthread_create(&barber_threads[i], NULL, barber, (void *) barber_param);
     }
     
     //make customer creads
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
       usleep(rand() % 1000);
       int id = i + 1;
       ThreadParam* customer_param = new ThreadParam(&shop, id, 0);
-      pthread_create(&customer_threads[i], NULL, customer, customer_param);
+      pthread_create(&customer_threads[i], NULL, customer, (void *) customer_param);
     }
 
    // Wait for customers to finish and cancel barber(s)
@@ -98,7 +98,8 @@ void *barber(void *arg)
       usleep(service_time);
       shop.byeCustomer(id);
    }
-   return nullptr;
+   pthread_exit(NULL);
+   //return nullptr;
 }
 
 void *customer(void *arg) 
@@ -113,5 +114,6 @@ void *customer(void *arg)
    {
      shop.leaveShop(id, barber);
    }
-   return nullptr;
+   pthread_exit(NULL);
+   //return nullptr;
 }

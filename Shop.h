@@ -35,7 +35,7 @@ public:
 
  private:
    const int max_waiting_cust_;              // the max number of threads that can wait
-   //const int max_num_barbers_;
+   const int barber; // the id of the barber thread, was static const int
    int *customer_in_chair_;
    bool *in_service_;            
    bool *money_paid_;
@@ -49,8 +49,6 @@ public:
    pthread_cond_t  *cond_customer_served_;
    pthread_cond_t  *cond_barber_paid_;
    pthread_cond_t  *cond_barber_sleeping_;
-
-   const int barber = 0; // the id of the barber thread, was static const int
   
    void init();
    string int2string(int i);
