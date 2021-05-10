@@ -23,9 +23,10 @@ void Shop::init()
    cond_barber_sleeping_ = new pthread_cond_t[barber];
    //pthread_cond_init(&cond_barber_sleeping_, NULL);
 
+   int default_customer_in_chair_ = 0;
    for (int i = 0; i < barber; i++)
    {
-      customer_in_chair_[i] = 0;
+      customer_in_chair_[i] = &default_customer_in_chair_;
       in_service_[i] = false;
       money_paid_[i] = false;
 
