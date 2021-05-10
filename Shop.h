@@ -28,18 +28,18 @@ public:
       init(); 
    };
 
-   int visitShop(int id);   // return barber id only when a customer got a service
-   void leaveShop(int id, int barber);
-   void helloCustomer(int id);
-   void byeCustomer(int id);
-   int get_cust_drops() const;
+   int visitShop(int customerID);   // return barber id only when a customer got a service
+   void leaveShop(int customerID, int barberID);
+   void helloCustomer(int barberID);
+   void byeCustomer(int barberID);
+   int get_cust_drops() const; //does this need to be const?
 
  private:
    const int max_waiting_cust_;              // the max number of threads that can wait
    const int max_num_barbers_;
-   int customer_in_chair_;
-   bool in_service_;            
-   bool money_paid_;
+   int *customer_in_chair_;
+   bool *in_service_;            
+   bool *money_paid_;
    queue<int> waiting_chairs_;  // includes the ids of all waiting threads
    int cust_drops_;
 
@@ -47,14 +47,15 @@ public:
    // mutex_ is used in conjuction with all conditional variables
    pthread_mutex_t mutex_;
    pthread_cond_t  cond_customers_waiting_;
-   pthread_cond_t  cond_customer_served_;
-   pthread_cond_t  cond_barber_paid_;
-   pthread_cond_t  cond_barber_sleeping_;
+   pthread_cond_t  *cond_customer_served_;
+   pthread_cond_t  *cond_barber_paid_;
+   pthread_cond_t  *cond_barber_sleeping_;
 
    static const int barber = 0; // the id of the barber thread
   
    void init();
    string int2string(int i);
    void print(int person, string message);
+   //int hasServiceChair();
 };
 #endif

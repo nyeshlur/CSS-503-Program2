@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
    pthread_t customer_threads[num_customers];
    Shop shop(num_barbers, num_chairs);
 
+    //make barber threads
     for (int i = 0; i < num_barbers; i++) 
     {
       //usleep(rand() % 1000);
@@ -56,7 +57,8 @@ int main(int argc, char *argv[])
       ThreadParam* barber_param = new ThreadParam(&shop, id, service_time);
       pthread_create(&barber_threads[i], NULL, barber, barber_param);
     }
-
+    
+    //make customer creads
     for (int i = 0; i < num_customers; i++) 
     {
       usleep(rand() % 1000);

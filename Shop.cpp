@@ -43,10 +43,10 @@ int Shop::visitShop(int id)
    // If all chairs are full then leave shop
    if (waiting_chairs_.size() == max_waiting_cust_) 
    {
-      print( id,"leaves the shop because of no available waiting chairs.");
+      print(id,"leaves the shop because of no available waiting chairs.");
       ++cust_drops_;
       pthread_mutex_unlock(&mutex_);
-      return 0; //return false;
+      return -1; //return false;
    }
    
    // If someone is being served or transitioning waiting to service chair
@@ -84,7 +84,7 @@ void Shop::leaveShop(int id, int barber)
    // Pay the barber and signal barber appropriately
    money_paid_ = true;
    pthread_cond_signal(&cond_barber_paid_);
-   print( id, "says good-bye to the barber." );
+   print(id, "says good-bye to the barber." );
    pthread_mutex_unlock(&mutex_);
 }
 
