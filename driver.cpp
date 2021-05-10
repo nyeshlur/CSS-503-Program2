@@ -44,15 +44,15 @@ int main(int argc, char *argv[])
    int num_customers = atoi(argv[3]);
    int service_time = atoi(argv[4]);
 
-   //Single barber, one shop, many customers
+   //many barbers, one shop, many customers
    pthread_t barber_threads[num_barbers];
    pthread_t customer_threads[num_customers];
    Shop shop(num_barbers, num_chairs);
 
     for (int i = 0; i < num_barbers; i++) 
     {
-      //usleep(rand() % 1000); is this needed?
-      int id = i + 1;
+      //usleep(rand() % 1000);
+      int id = i; //+ 1;
       ThreadParam* barber_param = new ThreadParam(&shop, id, service_time);
       pthread_create(&barber_threads[i], NULL, barber, barber_param);
     }
