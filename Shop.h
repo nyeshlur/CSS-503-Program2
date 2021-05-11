@@ -21,20 +21,39 @@ using namespace std;
 class Shop 
 {
 public:
+   
+   //Shop constructor that takes in number of waiting chairs and number of barbers
    Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs >= 0 ) ? num_chairs : kDefaultNumChairs), 
    cust_drops_(0), barber((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
    { 
       init(); 
    };
+
+   //default constructor that uses default number of chairs and barbers
    Shop() : max_waiting_cust_(kDefaultNumChairs), barber(kDefaultNumBarbers), cust_drops_(0)
    { 
       init(); 
    };
 
+   //Method that represents customer (with id customerID) visiting the barber shop
+   //They will either leave because there are no chairs, wait in a waiting chair, or start a hair cut with a barber
+   //If the customer does not get a hair cut the method will return -1, if the customer does get a haircut
+   //the method returns the id of the barber who services that customer.
    int visitShop(int customerID);   // return barber id only when a customer got a service
+
+   //This method represents a customer (with ID customerID) getting their hair cut and then paying and saying goodbye
+   //to the barber with id barberID
    void leaveShop(int customerID, int barberID);
+
+   //method to coordinate what barber is doing
+   //if there is no customer in the barber's chair or the waiting chairs are empty, then the barber sleeps
+   //if there is a customer in the barber's chair they start a hair cut
    void helloCustomer(int barberID);
+
+   //In this method customer's service is completed, and barber call in next customer
    void byeCustomer(int barberID);
+
+   //method to get number of customers dropped due to no available seats
    int get_cust_drops() const; //does this need to be const?
 
  private:
