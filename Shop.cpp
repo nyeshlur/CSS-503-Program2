@@ -71,7 +71,7 @@ int Shop::visitShop(int customerID)
          in_service_[availableChair] = true;
       }
 
-      print(customerID, "moves to a service chair[" + int2string(availableChair) + "], # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
+      print(customerID, "moves to service chair [" + int2string(availableChair) + "], # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
 
       pthread_cond_signal(&cond_barber_sleeping_[availableChair]);
 
