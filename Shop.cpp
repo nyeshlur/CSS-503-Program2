@@ -173,7 +173,7 @@ void Shop::helloCustomer(int barberID)
    pthread_mutex_unlock(&mutex_);
 }
 
-//In this method customer's service is completed, and barber call in next customer
+//In this method customer's service is completed, and barber calls in next customer
 void Shop::byeCustomer(int barberID) 
 {
   pthread_mutex_lock(&mutex_);

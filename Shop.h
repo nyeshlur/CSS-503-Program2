@@ -50,7 +50,7 @@ public:
    //if there is a customer in the barber's chair they start a hair cut
    void helloCustomer(int barberID);
 
-   //In this method customer's service is completed, and barber call in next customer
+   //In this method customer's service is completed, and barber calls in next customer
    void byeCustomer(int barberID);
 
    //method to get number of customers dropped due to no available seats
