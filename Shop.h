@@ -1,5 +1,6 @@
 /*
 Base code provided by rtdimpsey.
+Modifications by Nayana Yeshlur for CSS 503 Program 2.
 */
 #ifndef SHOP_H__ 
 #define SHOP_H_ 
@@ -11,13 +12,13 @@ Base code provided by rtdimpsey.
 #include <queue>
 using namespace std;
 
-#define kDefaultNumChairs 3
+#define kDefaultNumChairs 1
 #define kDefaultNumBarbers 1
 
 class Shop 
 {
 public:
-   Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs > 0 ) ? num_chairs : kDefaultNumChairs), 
+   Shop(int num_barbers, int num_chairs) : max_waiting_cust_((num_chairs >= 0 ) ? num_chairs : kDefaultNumChairs), 
    cust_drops_(0), barber((num_barbers > 0) ? num_barbers : kDefaultNumBarbers)
    { 
       init(); 

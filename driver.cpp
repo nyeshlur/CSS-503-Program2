@@ -1,6 +1,8 @@
 /*
 Base code provided by rtdimpsey.
+Modifications by Nayana Yeshlur for CSS 503 Program 2.
 g++ driver.cpp Shop.cpp –o sleepingBarbers –lpthread
+valgrind --leak-check=full ./sleepingBarbers
 */
 
 #include <iostream>

@@ -1,5 +1,6 @@
 /*
 Base code provided by rtdimpsey.
+Modifications by Nayana Yeshlur for CSS 503 Program 2.
 */
 #include "Shop.h"
 using namespace std;
@@ -60,8 +61,23 @@ int Shop::visitShop(int customerID)
 {
    pthread_mutex_lock(&mutex_);
    
+   if(waiting_chairs_.size() == 0 && hasChair() != -1) {
+      int availableChair = hasChair();
+      if (customer_in_chair_[availableChair] == 0) {
+         customer_in_chair_[availableChair] = customerID;             // have the service chair
+         in_service_[availableChair] = true;
+      }
+
+      print(customerID, "moves to a service chair[" + int2string(availableChair) + "], # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
+
+      pthread_cond_signal(&cond_barber_sleeping_[availableChair]);
+
+      pthread_mutex_unlock(&mutex_); 
+      return availableChair; //return true;
+   }
+
    // If all chairs are full then leave shop
-   if (waiting_chairs_.size() == max_waiting_cust_) 
+   if (waiting_chairs_.size() == max_waiting_cust_)
    {
       print(customerID,"leaves the shop because of no available waiting chairs.");
       ++cust_drops_;
@@ -79,10 +95,6 @@ int Shop::visitShop(int customerID)
       pthread_cond_wait(&cond_customers_waiting_, &mutex_);
       waiting_chairs_.pop();
    }
-   bool test = waiting_chairs_.empty();
-
-   //cout << "test" << test << endl;
-
    
    int availableChair = hasChair();
    if (customer_in_chair_[availableChair] == 0) {
@@ -92,8 +104,6 @@ int Shop::visitShop(int customerID)
 
    print(customerID, "moves to a service chair[" + int2string(availableChair) + "], # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
    
-   //customer_in_chair_ = id;
-   //in_service_ = true;
 
    // wake up the barber just in case if he is sleeping
    pthread_cond_signal(&cond_barber_sleeping_[availableChair]);
