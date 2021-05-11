@@ -1,6 +1,9 @@
 /*
 Base code provided by rtdimpsey.
 Modifications by Nayana Yeshlur for CSS 503 Program 2.
+
+This program implements the sleeping barbers problem with multiple barber and customer threads.
+
 */
 #ifndef SHOP_H__ 
 #define SHOP_H_ 
@@ -51,9 +54,16 @@ public:
    pthread_cond_t  *cond_barber_paid_;
    pthread_cond_t  *cond_barber_sleeping_;
   
+   //A function used by the Shop constructors to initialize data members.
    void init();
+
+   //Takes in int, returns string representation
    string int2string(int i);
+
+   //outputs customer[id] or barber[id] depending on sign of person int, and outputs corresponding message string
    void print(int person, string message);
+
+   //checks to see where there is an empty chair, returns -1 if there are no empty chairs
    int hasChair();
 };
 #endif

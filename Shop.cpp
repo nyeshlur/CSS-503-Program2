@@ -1,10 +1,14 @@
 /*
 Base code provided by rtdimpsey.
 Modifications by Nayana Yeshlur for CSS 503 Program 2.
+
+This program implements the sleeping barbers problem with multiple barber and customer threads.
+
 */
 #include "Shop.h"
 using namespace std;
 
+//A function used by the Shop constructors to initialize data members.
 void Shop::init() 
 {
 
@@ -19,15 +23,11 @@ void Shop::init()
    cond_barber_paid_ = new pthread_cond_t[barber];
    cond_barber_sleeping_ = new pthread_cond_t[barber];
 
-   //int default_customer_in_chair_ = 0;
-   //bool default_in_service_ = false;
-   //bool default_money_paid_ = false;
-
    for (int i = 0; i < barber; i++)
    {
-      customer_in_chair_[i] = 0; //default_customer_in_chair_;
-      in_service_[i] = false; //default_in_service_;
-      money_paid_[i] = false; //default_money_paid_;
+      customer_in_chair_[i] = 0;
+      in_service_[i] = false;
+      money_paid_[i] = false;
 
       pthread_cond_init(&cond_customer_served_[i], NULL);
       pthread_cond_init(&cond_barber_paid_[i], NULL);
@@ -35,6 +35,7 @@ void Shop::init()
    }
 }
 
+//Takes in int, returns string representation
 string Shop::int2string(int i) 
 {
    stringstream out;
@@ -42,6 +43,7 @@ string Shop::int2string(int i)
    return out.str( );
 }
 
+//outputs customer[id] or barber[id] depending on sign of person int, and outputs corresponding message string
 void Shop::print(int person, string message)
 {
    if(person > 0) {
@@ -52,6 +54,7 @@ void Shop::print(int person, string message)
    }
 }
 
+//method to get number of customers dropped due to no available seats
 int Shop::get_cust_drops() const
 {
     return cust_drops_;
@@ -172,6 +175,7 @@ void Shop::byeCustomer(int barberID)
   pthread_mutex_unlock( &mutex_ );  // unlock
 }
 
+//checks to see where there is an empty chair, returns -1 if there are no empty chairs
 int Shop::hasChair(){
     for(int i=0; i< barber; i++){
         if(customer_in_chair_[i]==0){

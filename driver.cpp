@@ -1,6 +1,10 @@
 /*
 Base code provided by rtdimpsey.
 Modifications by Nayana Yeshlur for CSS 503 Program 2.
+
+This program implements the sleeping barbers problem with multiple barber and customer threads.
+The driver creates the barbers, customers, and shop.
+
 g++ driver.cpp Shop.cpp –o sleepingBarbers –lpthread
 valgrind --leak-check=full ./sleepingBarbers
 */
@@ -54,13 +58,12 @@ int main(int argc, char *argv[])
     //make barber threads
     for (int i = 0; i < num_barbers; i++) 
     {
-      //usleep(rand() % 1000);
-      int id = i; //+ 1;
+      int id = i;
       ThreadParam* barber_param = new ThreadParam(&shop, id, service_time);
       pthread_create(&barber_threads[i], NULL, barber, (void *) barber_param);
     }
     
-    //make customer creads
+    //make customer threads
     for (int i = 0; i < num_customers; i++) 
     {
       usleep(rand() % 1000);
