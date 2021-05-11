@@ -78,6 +78,7 @@ int Shop::visitShop(int customerID)
 
       print(customerID, "moves to service chair [" + int2string(availableChair) + "], # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
 
+      //signal for barber to wake up 
       pthread_cond_signal(&cond_barber_sleeping_[availableChair]);
 
       pthread_mutex_unlock(&mutex_); 
@@ -98,9 +99,13 @@ int Shop::visitShop(int customerID)
    //if there are no barber/service chairs available but there are waiting chairs available, take waiting chair 
    if(hasChair() == -1 || !waiting_chairs_.empty())
    {
+      //while customer is waiting, push onto wait queue
       waiting_chairs_.push(customerID);
       print(customerID, "takes a waiting chair. # waiting seats available = " + int2string(max_waiting_cust_ - waiting_chairs_.size()));
+      //If there are no barber chairs available, thread should wait on cond_customers_waiting condition
       pthread_cond_wait(&cond_customers_waiting_, &mutex_);
+
+      //once thread can continue it should be popped from the waiting queue
       waiting_chairs_.pop();
    }
    
